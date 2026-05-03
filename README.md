@@ -1,7 +1,6 @@
 # AI-Powered Email Management: Web Application and Browser Extension <img src="https://github.com/user-attachments/assets/671fc71c-3d65-4a2b-afca-8157b6bb2651" alt="Icon" width="20" height="20" style="border-radius: 50%;">
 
 
-
 <p align="center">
   <img src="https://github.com/user-attachments/assets/70488be6-5b5c-4d4e-9329-b6f3becb0d11" alt="Image" style="width:50%; height:auto;">
 </p>
