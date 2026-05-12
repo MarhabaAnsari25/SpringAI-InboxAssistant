@@ -4,8 +4,27 @@ REM Simple launcher - starts backend and frontend
 echo Starting AI Email Management System...
 echo.
 
-REM Set API Key
-set GEMINI_KEY=PasteYourGeminiKeyCodeHere
+REM Load GEMINI_KEY from .env file if not already set
+if "%GEMINI_KEY%"=="" (
+    if exist ".env" (
+        for /f "usebackq tokens=1,* delims==" %%A in (".env") do (
+            if /i "%%A"=="GEMINI_KEY" set GEMINI_KEY=%%B
+        )
+    )
+)
+
+REM Check if key was loaded
+if "%GEMINI_KEY%"=="" (
+    echo ERROR: GEMINI_KEY is not set!
+    echo Please add your key to the .env file:
+    echo   GEMINI_KEY=your_key_here
+    echo.
+    pause
+    exit /b 1
+)
+
+echo API Key: Loaded from .env
+echo.
 
 REM Start Backend
 echo [1/2] Starting Backend Server...
