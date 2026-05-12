@@ -11,11 +11,27 @@ echo   Starting Full Application...
 echo ============================================
 echo.
 
-REM Set the Gemini API Key
-set GEMINI_KEY=PasteYourGeminiKeyCodeHere
+REM Load GEMINI_KEY from .env file if not already set
+if "%GEMINI_KEY%"=="" (
+    if exist ".env" (
+        for /f "usebackq tokens=1,* delims==" %%A in (".env") do (
+            if /i "%%A"=="GEMINI_KEY" set GEMINI_KEY=%%B
+        )
+    )
+)
+
+REM Check if key was loaded
+if "%GEMINI_KEY%"=="" (
+    echo ERROR: GEMINI_KEY is not set!
+    echo Please add your key to the .env file:
+    echo   GEMINI_KEY=your_key_here
+    echo.
+    pause
+    exit /b 1
+)
 
 echo [1/3] Setting up environment...
-echo      API Key: Configured
+echo      API Key: Loaded from .env
 echo      Port: 9191 (Backend)
 echo      Port: 5173 (Frontend)
 echo.
@@ -60,17 +76,18 @@ echo.
 
 REM Start Backend in a new window
 echo Starting Backend Server...
-start "Email Writer Backend - Port 9191" cmd /k "color 0B && echo ============================================ && echo   BACKEND SERVER - Port 9191 && echo ============================================ && echo. && set GEMINI_KEY=%GEMINI_KEY% && mvnw.cmd spring-boot:run"
+set "PROJECT_DIR=%~dp0"
+start "Email Writer Backend - Port 9191" cmd /k "color 0B && echo ============================================ && echo   BACKEND SERVER - Port 9191 && echo ============================================ && echo. && cd /d ""%PROJECT_DIR%"" && set GEMINI_KEY=%GEMINI_KEY% && mvnw.cmd spring-boot:run"
 
-REM Wait a bit for backend to start
+REM Wait for backend to start
 echo Waiting for backend to initialize (20 seconds)...
 timeout /t 20 /nobreak >nul
 
 REM Start Frontend in a new window
 echo Starting Frontend Application...
-start "Email Writer Frontend - Port 5173" cmd /k "color 0E && echo ============================================ && echo   FRONTEND APPLICATION - Port 5173 && echo ============================================ && echo. && cd email-writer-react && npm run dev"
+start "Email Writer Frontend - Port 5173" cmd /k "color 0E && echo ============================================ && echo   FRONTEND APPLICATION - Port 5173 && echo ============================================ && echo. && cd /d ""%PROJECT_DIR%email-writer-react"" && npm run dev"
 
-REM Wait a bit for frontend to start
+REM Wait for frontend to start
 echo Waiting for frontend to initialize (10 seconds)...
 timeout /t 10 /nobreak >nul
 
@@ -89,7 +106,6 @@ echo.
 echo Opening browser in 5 seconds...
 timeout /t 5 /nobreak >nul
 
-REM Open browser to frontend
 start http://localhost:5173
 
 echo.
@@ -97,10 +113,7 @@ echo ============================================
 echo   READY TO USE!
 echo ============================================
 echo.
-echo To stop the application:
-echo   - Close both terminal windows
-echo   - Or press Ctrl+C in each window
-echo.
+echo To stop: close both terminal windows or press Ctrl+C in each.
 echo This window can be closed safely.
 echo.
 pause
