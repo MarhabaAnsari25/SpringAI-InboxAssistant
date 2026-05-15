@@ -1,28 +1,176 @@
+a<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Email Reply Assistant</title>
-    <link rel="stylesheet" href="content.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+
+        body {
+            width: 380px;
+            background: #f4f4f4;
+            padding: 16px;
+            color: #333;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .header h2 {
+            font-size: 17px;
+            color: #1a73e8;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #444;
+        }
+
+        textarea, select {
+            width: 100%;
+            border: 1px solid #dadce0;
+            border-radius: 6px;
+            padding: 8px 10px;
+            font-size: 13px;
+            color: #333;
+            background: white;
+            resize: vertical;
+        }
+        textarea:focus, select:focus {
+            outline: none;
+            border-color: #1a73e8;
+        }
+
+        #emailContent {
+            height: 110px;
+            margin-bottom: 10px;
+        }
+
+        #tone {
+            margin-bottom: 12px;
+            height: 36px;
+        }
+
+        #generateBtn {
+            width: 100%;
+            padding: 10px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        #generateBtn:hover:not(:disabled) { background: #1557b0; }
+        #generateBtn:disabled { background: #a8c7fa; cursor: not-allowed; }
+
+        #status {
+            margin-top: 10px;
+            font-size: 12px;
+            min-height: 18px;
+            text-align: center;
+        }
+        #status.error { color: #d93025; }
+        #status.success { color: #1e8e3e; }
+
+        #resultBox {
+            display: none;
+            margin-top: 12px;
+        }
+        #resultBox label { margin-bottom: 4px; }
+        #replyOutput {
+            height: 140px;
+            background: #fff;
+            font-size: 13px;
+        }
+
+        .copy-btn {
+            margin-top: 8px;
+            width: 100%;
+            padding: 8px;
+            background: #1e8e3e;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .copy-btn:hover { background: #137333; }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            margin: 14px 0;
+        }
+
+        .tip {
+            font-size: 11px;
+            color: #888;
+            text-align: center;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.4);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
 </head>
 <body>
-    <div class="scroll-icon"></div>
-    <a href="https://mail.google.com/mail/u/0/#inbox" target="_blank">
-        <div class="scroll-icon-mail"></div>
-    </a>
-    <div class="container">
-        <h2 class="title">📩 Email Reply Assistant</h2>
-        <p class="description">Boost your productivity with AI-generated email responses. Save time and communicate effectively!</p>
-        <div class="features">
-            <span class="feature-item">📜 Quick Replies</span>
-            <span class="feature-item">😇 Custom Tone</span>
-            <span class="feature-item">📧 Gmail Integration</span>
-            <span class="feature-item">🤖 AI Suggestions</span>
-            <span class="feature-item">⏳ Save Time</span>
-            <span class="feature-item">🔍 Smart Analysis</span>
-        </div>
-        <p class="footer">Enhance your email experience with intelligent assistance!</p>
+
+    <div class="header">
+        <img src="Icon.png" width="28" height="28" alt="icon">
+        <h2>📩 Email Reply Assistant</h2>
     </div>
+
+    <label for="emailContent">Email Content</label>
+    <textarea id="emailContent" placeholder="Paste the email you want to reply to…"></textarea>
+
+    <label for="tone">Reply Tone</label>
+    <select id="tone">
+        <option value="professional">Professional</option>
+        <option value="friendly">Friendly</option>
+        <option value="formal">Formal</option>
+        <option value="casual">Casual</option>
+        <option value="enthusiastic">Enthusiastic</option>
+        <option value="empathetic">Empathetic</option>
+        <option value="direct">Direct</option>
+        <option value="diplomatic">Diplomatic</option>
+    </select>
+
+    <button id="generateBtn">✨ Generate Reply</button>
+    <div id="status"></div>
+
+    <div id="resultBox">
+        <hr class="divider">
+        <label for="replyOutput">Generated Reply</label>
+        <textarea id="replyOutput" readonly></textarea>
+        <button class="copy-btn" id="copyBtn">📋 Copy to Clipboard</button>
+    </div>
+
+    <hr class="divider">
+    <p class="tip">💡 Open Gmail and click <strong>Reply</strong> — the AI button appears automatically in the compose toolbar.</p>
+
     <script src="script.js"></script>
 </body>
 </html>
